@@ -124,6 +124,16 @@ func loadGraphData(fileName string) (int, bool, bool, []string, []int, [][]int, 
 	}
 	concreteDirectionFlag := (directionFlag == 1)
 
+	// Извлечение флага взвешенности, если он имеется
+	weightFlag := false
+	if len(str) >= 3 {
+		value, err := strconv.Atoi(str[2])
+		if err != nil {
+			return 0, false, false, nil, nil, nil, err
+		}
+		weightFlag = (value == 1)
+	}
+
 	// Загрузка имен вершин
 	names, err := loadNames(strings.Join([]string{fileName, ".names"}, ""))
 	if err != nil {
