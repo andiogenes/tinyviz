@@ -158,5 +158,5 @@ func loadGraphData(fileName string) (int, bool, bool, []string, []int, [][]int, 
 		return 0, false, false, nil, nil, nil, err
 	}
 
-	return vertexCount, concreteDirectionFlag, names, path, matrix, nil
+	return vertexCount, concreteDirectionFlag, weightFlag, names, path, matrix, nil
 }
