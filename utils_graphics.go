@@ -134,6 +134,7 @@ func renderGraph(output string, vertexCount int, isDirected bool, names []string
 		for j := 0; j < vertexCount; j++ {
 			if matrix[i][j] != 0 {
 				drawEdge(context, positions[i].x, positions[i].y, positions[j].x, positions[j].y, VertexRadius, isDirected)
+				drawEdgeWeight(context, matrix[i][j], positions[i].x, positions[i].y, positions[j].x, positions[j].y)
 			}
 		}
 	}
