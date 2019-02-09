@@ -110,7 +110,7 @@ type vertex2D struct {
 }
 
 // renderGraph рисует по заданным данным граф и сохраняет изображение в png-файл output
-func renderGraph(output string, vertexCount int, isDirected bool, names []string, path []int, matrix [][]int) {
+func renderGraph(output string, vertexCount int, isDirected bool, isWeighted bool, names []string, path []int, matrix [][]int) {
 	positions := make([]vertex2D, vertexCount)
 	combination := randomCombination(vertexCount*vertexCount, vertexCount)
 
