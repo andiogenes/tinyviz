@@ -90,6 +90,19 @@ func drawEdge(context *gg.Context, x1, y1, x2, y2, r float64, isDirected bool) {
 	}
 }
 
+// drawWeightInfo отображает информацию о весе ребра
+func drawEdgeWeight(context *gg.Context, weight int, x1, y1, x2, y2 float64) {
+	medianX, medianY := (x2-x1)/2., (y2-y1)/2.
+
+	strW, strH := context.MeasureString(fmt.Sprintf("%d", weight))
+
+	context.SetRGBA255(255, 135, 245, 175)
+	context.DrawRectangle(x1+medianX, y1+medianY-strH, strW, strH)
+	context.Fill()
+	context.SetRGB255(145, 35, 185)
+	context.DrawString(fmt.Sprintf("%d", weight), x1+medianX, y1+medianY)
+}
+
 type vertex2D struct {
 	x      float64
 	y      float64
