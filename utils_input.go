@@ -96,8 +96,8 @@ func loadPath(fileName string, vertexCount int) ([]int, error) {
 	return path, nil
 }
 
-// Загружает размер, флаг ориентированности, имена вершин, список пути и матрицу смежности графа
-func loadGraphData(fileName string) (int, bool, []string, []int, [][]int, error) {
+// Загружает размер, флаг ориентированности, флаг взвешенности, имена вершин, список пути и матрицу смежности графа
+func loadGraphData(fileName string) (int, bool, bool, []string, []int, [][]int, error) {
 	// Загрузка файла-дескриптора
 	descr, err := ioutil.ReadFile(fileName)
 	if err != nil {
