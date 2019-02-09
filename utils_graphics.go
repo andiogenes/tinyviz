@@ -132,7 +132,7 @@ func renderGraph(output string, vertexCount int, isDirected bool, names []string
 	for i := 0; i < vertexCount; i++ {
 		drawVertex(context, names[i], positions[i].x, positions[i].y, VertexRadius, positions[i].inPath)
 		for j := 0; j < vertexCount; j++ {
-			if matrix[i][j] == 1 {
+			if matrix[i][j] != 0 {
 				drawEdge(context, positions[i].x, positions[i].y, positions[j].x, positions[j].y, VertexRadius, isDirected)
 			}
 		}
