@@ -111,7 +111,7 @@ type vertex2D struct {
 }
 
 // renderGraph рисует по заданным данным граф и сохраняет изображение в png-файл output
-func renderGraph(output string, vertexCount int, isDirected bool, isWeighted bool, names []string, path []int, matrix [][]int) {
+func renderGraph(output string, vertexCount int, isDirected bool, isWeighted bool, names []string, path []int, matrix [][]int, weights [][]int) {
 	positions := make([]vertex2D, vertexCount)
 	combination := randomCombination(vertexCount*vertexCount, vertexCount)
 
@@ -133,9 +133,11 @@ func renderGraph(output string, vertexCount int, isDirected bool, isWeighted boo
 	for i := 0; i < vertexCount; i++ {
 		drawVertex(context, names[i], positions[i].x, positions[i].y, VertexRadius, positions[i].inPath)
 		for j := 0; j < vertexCount; j++ {
-			if matrix[i][j] != 0 {
+			if matrix[i][j] == 1 {
 				drawEdge(context, positions[i].x, positions[i].y, positions[j].x, positions[j].y, VertexRadius, isDirected)
-				drawEdgeWeight(context, matrix[i][j], positions[i].x, positions[i].y, positions[j].x, positions[j].y)
+				if isWeighted {
+					drawEdgeWeight(context, weights[i][j], positions[i].x, positions[i].y, positions[j].x, positions[j].y)
+				}
 			}
 		}
 	}

@@ -23,7 +23,7 @@ func loadNames(fileName string) ([]string, error) {
 	return names, nil
 }
 
-// loadMatrix загружает матрицу смежности графа из файла
+// loadMatrix загружает матрицу смежности/весов графа из файла
 func loadMatrix(fileName string, matrixSize int) ([][]int, error) {
 	f, err := ioutil.ReadFile(fileName)
 	if err != nil {
@@ -50,7 +50,7 @@ func loadMatrix(fileName string, matrixSize int) ([][]int, error) {
 		for j := 0; j < matrixSize; j++ {
 			// Проверка на принадлежность границам массива
 			if valuesCount <= i*matrixSize+j {
-				err = errors.New("Mismatch between graph descriptor and adjacency matrix")
+				err = errors.New("Mismatch between graph descriptor and matrix")
 				return nil, err
 			}
 			strValue := values[i*matrixSize+j]
@@ -96,31 +96,31 @@ func loadPath(fileName string, vertexCount int) ([]int, error) {
 	return path, nil
 }
 
-// Загружает размер, флаг ориентированности, флаг взвешенности, имена вершин, список пути и матрицу смежности графа
-func loadGraphData(fileName string) (int, bool, bool, []string, []int, [][]int, error) {
+// Загружает размер, флаг ориентированности, флаг взвешенности, имена вершин, список пути, матрицу смежности графа, матрицу весов
+func loadGraphData(fileName string) (int, bool, bool, []string, []int, [][]int, [][]int, error) {
 	// Загрузка файла-дескриптора
 	descr, err := ioutil.ReadFile(fileName)
 	if err != nil {
-		return 0, false, false, nil, nil, nil, err
+		return 0, false, false, nil, nil, nil, nil, err
 	}
 
 	// Парсинг дескриптора
 	str := strings.Split(string(descr), "\r\n")
 	// Если в выражении меньше двух значений, то оно некорректно
 	if len(str) < 2 {
-		return 0, false, false, nil, nil, nil, err
+		return 0, false, false, nil, nil, nil, nil, err
 	}
 
 	// Извлечение количества вершин из файла
 	vertexCount, err := strconv.Atoi(str[0])
 	if err != nil {
-		return 0, false, false, nil, nil, nil, err
+		return 0, false, false, nil, nil, nil, nil, err
 	}
 
 	// Извлечение флага ориентированности
 	directionFlag, err := (strconv.Atoi(str[1]))
 	if err != nil {
-		return 0, false, false, nil, nil, nil, err
+		return 0, false, false, nil, nil, nil, nil, err
 	}
 	concreteDirectionFlag := (directionFlag == 1)
 
@@ -129,7 +129,7 @@ func loadGraphData(fileName string) (int, bool, bool, []string, []int, [][]int, 
 	if len(str) >= 3 {
 		value, err := strconv.Atoi(str[2])
 		if err != nil {
-			return 0, false, false, nil, nil, nil, err
+			return 0, false, false, nil, nil, nil, nil, err
 		}
 		weightFlag = (value == 1)
 	}
@@ -137,12 +137,12 @@ func loadGraphData(fileName string) (int, bool, bool, []string, []int, [][]int, 
 	// Загрузка имен вершин
 	names, err := loadNames(strings.Join([]string{fileName, ".names"}, ""))
 	if err != nil {
-		return 0, false, false, nil, nil, nil, err
+		return 0, false, false, nil, nil, nil, nil, err
 	}
 
 	if namesCount := len(names); namesCount != vertexCount {
 		err = fmt.Errorf("Mismatch between number of vertices and it's names: %d vs %d", vertexCount, namesCount)
-		return 0, false, false, nil, nil, nil, err
+		return 0, false, false, nil, nil, nil, nil, err
 	}
 
 	path, err := loadPath(strings.Join([]string{fileName, ".path"}, ""), vertexCount)
@@ -165,5 +165,5 @@ func loadGraphData(fileName string) (int, bool, bool, []string, []int, [][]int, 
 		weights = matrix
 	}
 
-	return vertexCount, concreteDirectionFlag, weightFlag, names, path, matrix, nil
+	return vertexCount, concreteDirectionFlag, weightFlag, names, path, matrix, weights, nil
 }

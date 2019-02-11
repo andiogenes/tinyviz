@@ -10,14 +10,14 @@ import (
 
 // visualize визуализирует граф на основе информации из дескриптора
 func visualize(fileName string) error {
-	count, isDirected, isWeighted, names, path, matrix, err := loadGraphData(fileName)
+	count, isDirected, isWeighted, names, path, matrix, weights, err := loadGraphData(fileName)
 	if err != nil {
 		return err
 	}
 
 	shuffleSeed()
 
-	renderGraph(fmt.Sprintf("%s.viz.png", fileName), count, isDirected, isWeighted, names, path, matrix)
+	renderGraph(fmt.Sprintf("%s.viz.png", fileName), count, isDirected, isWeighted, names, path, matrix, weights)
 	fmt.Printf("%s visualizated\n", fileName)
 
 	return nil
