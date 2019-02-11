@@ -155,7 +155,14 @@ func loadGraphData(fileName string) (int, bool, bool, []string, []int, [][]int, 
 	// Загрузка матрицы смежности
 	matrix, err := loadMatrix(strings.Join([]string{fileName, ".matrix"}, ""), vertexCount)
 	if err != nil {
-		return 0, false, false, nil, nil, nil, err
+		return 0, false, false, nil, nil, nil, nil, err
+	}
+
+	// Загрузка матрицы весов
+	weights, err := loadMatrix(strings.Join([]string{fileName, ".weights"}, ""), vertexCount)
+	if err != nil {
+		fmt.Println(err.Error())
+		weights = matrix
 	}
 
 	return vertexCount, concreteDirectionFlag, weightFlag, names, path, matrix, nil
