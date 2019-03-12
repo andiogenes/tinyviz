@@ -44,8 +44,8 @@ func drawVertex(context *gg.Context, name string, x, y, r float64, inPath bool, 
 	context.SetLineWidth(2)
 	context.StrokePreserve()
 	if !inPath {
-		if isColored {
-			context.SetRGBA255(convertColor(colors[colorIndex]))
+		if isColored && colorIndex != 0 {
+			context.SetRGBA255(convertColor(colors[colorIndex-1]))
 		} else {
 			context.SetRGBA255(VertexColorRed, VertexColorGreen, VertexColorBlue, VertexColorAlpha)
 		}
@@ -68,7 +68,7 @@ func drawEdge(context *gg.Context, x1, y1, x2, y2, r float64, isDirected bool, i
 	// Преобразование длины вектора в r
 	vecX, vecY = (vecX/vecLen)*r, (vecY/vecLen)*r
 
-	if isColored {
+	if isColored && colorIndex != 0 {
 		context.SetRGBA255(convertColor(colors[colorIndex]))
 	} else {
 		context.SetColor(color.Black)
@@ -99,7 +99,7 @@ func drawEdge(context *gg.Context, x1, y1, x2, y2, r float64, isDirected bool, i
 		context.LineTo(x2-vecX*1.5+normX, y2-vecY*1.5+normY)
 		context.LineTo(x2-vecX*1.5-normX, y2-vecY*1.5-normY)
 		context.LineTo(x2-vecX, y2-vecY)
-		if isColored {
+		if isColored && colorIndex != 0 {
 			context.SetRGBA255(convertColor(colors[colorIndex]))
 		} else {
 			context.SetColor(color.Black)
