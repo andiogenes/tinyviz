@@ -17,7 +17,7 @@ func visualize(fileName string) error {
 
 	shuffleSeed()
 
-	renderGraph(fmt.Sprintf("%s.viz.png", fileName), count, isDirected, isWeighted, names, path, matrix, weights)
+	renderGraph(fmt.Sprintf("%s.viz.png", fileName), count, isDirected, isWeighted, isColored, names, path, matrix, weights, colors, colorMatrix)
 	fmt.Printf("%s visualizated\n", fileName)
 
 	return nil

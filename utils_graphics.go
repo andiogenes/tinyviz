@@ -32,14 +32,23 @@ func generateContext(width, height int) *gg.Context {
 	return context
 }
 
+// convertColor разделяет цвет из RGBA255 по соответствующим компонентам (Red, Green, Blue, alpha)
+func convertColor(colorRgba uint32) (int, int, int, int) {
+	return int((colorRgba >> 24) & 0x000000ff), int((colorRgba >> 16) & 0x000000ff), int((colorRgba >> 8) & 0x000000ff), int(colorRgba & 0x000000ff)
+}
+
 // drawVertex рисует вершину графа
-func drawVertex(context *gg.Context, name string, x, y, r float64, inPath bool) {
+func drawVertex(context *gg.Context, name string, x, y, r float64, inPath bool, isColored bool, colors []uint32, colorIndex int) {
 	context.DrawCircle(x, y, r)
 	context.SetColor(color.Black)
 	context.SetLineWidth(2)
 	context.StrokePreserve()
 	if !inPath {
-		context.SetRGBA255(VertexColorRed, VertexColorGreen, VertexColorBlue, VertexColorAlpha)
+		if isColored {
+			context.SetRGBA255(convertColor(colors[colorIndex]))
+		} else {
+			context.SetRGBA255(VertexColorRed, VertexColorGreen, VertexColorBlue, VertexColorAlpha)
+		}
 	} else {
 		context.SetRGBA255(255-VertexColorRed, 255-VertexColorGreen, 255-VertexColorBlue, VertexColorAlpha)
 	}
@@ -53,13 +62,17 @@ func drawVertex(context *gg.Context, name string, x, y, r float64, inPath bool) 
 }
 
 // drawEdge рисует ребро графа
-func drawEdge(context *gg.Context, x1, y1, x2, y2, r float64, isDirected bool) {
+func drawEdge(context *gg.Context, x1, y1, x2, y2, r float64, isDirected bool, isColored bool, colors []uint32, colorIndex int) {
 	vecX, vecY := float64(x2-x1), float64(y2-y1)
 	vecLen := math.Sqrt(vecX*vecX + vecY*vecY)
 	// Преобразование длины вектора в r
 	vecX, vecY = (vecX/vecLen)*r, (vecY/vecLen)*r
 
-	context.SetColor(color.Black)
+	if isColored {
+		context.SetRGBA255(convertColor(colors[colorIndex]))
+	} else {
+		context.SetColor(color.Black)
+	}
 	context.SetLineWidth(1.2)
 	context.DrawLine(x1+vecX, y1+vecY, x2-vecX, y2-vecY)
 	context.Stroke()
@@ -86,7 +99,11 @@ func drawEdge(context *gg.Context, x1, y1, x2, y2, r float64, isDirected bool) {
 		context.LineTo(x2-vecX*1.5+normX, y2-vecY*1.5+normY)
 		context.LineTo(x2-vecX*1.5-normX, y2-vecY*1.5-normY)
 		context.LineTo(x2-vecX, y2-vecY)
-		context.SetColor(color.Black)
+		if isColored {
+			context.SetRGBA255(convertColor(colors[colorIndex]))
+		} else {
+			context.SetColor(color.Black)
+		}
 		context.Fill()
 	}
 }
@@ -111,7 +128,7 @@ type vertex2D struct {
 }
 
 // renderGraph рисует по заданным данным граф и сохраняет изображение в png-файл output
-func renderGraph(output string, vertexCount int, isDirected bool, isWeighted bool, names []string, path []int, matrix [][]int, weights [][]int) {
+func renderGraph(output string, vertexCount int, isDirected bool, isWeighted bool, isColored bool, names []string, path []int, matrix [][]int, weights [][]int, colors []uint32, colorCover [][]int) {
 	positions := make([]vertex2D, vertexCount)
 	combination := randomCombination(vertexCount*vertexCount, vertexCount)
 
@@ -131,10 +148,10 @@ func renderGraph(output string, vertexCount int, isDirected bool, isWeighted boo
 	context := generateContext(imgSide, imgSide)
 
 	for i := 0; i < vertexCount; i++ {
-		drawVertex(context, names[i], positions[i].x, positions[i].y, VertexRadius, positions[i].inPath)
+		drawVertex(context, names[i], positions[i].x, positions[i].y, VertexRadius, positions[i].inPath, isColored, colors, colorCover[i][i])
 		for j := 0; j < vertexCount; j++ {
 			if matrix[i][j] == 1 {
-				drawEdge(context, positions[i].x, positions[i].y, positions[j].x, positions[j].y, VertexRadius, isDirected)
+				drawEdge(context, positions[i].x, positions[i].y, positions[j].x, positions[j].y, VertexRadius, isDirected, isColored, colors, colorCover[i][j])
 				if isWeighted {
 					drawEdgeWeight(context, weights[i][j], positions[i].x, positions[i].y, positions[j].x, positions[j].y)
 				}
