@@ -10,7 +10,7 @@ import (
 
 // visualize визуализирует граф на основе информации из дескриптора
 func visualize(fileName string) error {
-	count, isDirected, isWeighted, names, path, matrix, weights, err := loadGraphData(fileName)
+	count, isDirected, isWeighted, isColored, names, path, matrix, weights, colors, colorMatrix, err := loadGraphData(fileName)
 	if err != nil {
 		return err
 	}

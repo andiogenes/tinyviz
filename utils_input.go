@@ -96,31 +96,71 @@ func loadPath(fileName string, vertexCount int) ([]int, error) {
 	return path, nil
 }
 
-// Загружает размер, флаг ориентированности, флаг взвешенности, имена вершин, список пути, матрицу смежности графа, матрицу весов
-func loadGraphData(fileName string) (int, bool, bool, []string, []int, [][]int, [][]int, error) {
+// loadColors загружает список цветов вершин/ребер в формате ARGB и матрицу цветов графа
+func loadColors(colorsFileName string, matrixFileName string, vertexCount int) ([]byte, [][]int, error) {
+	// Загрузка списка цветов
+	f, err := ioutil.ReadFile(colorsFileName)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	str := strings.Split(string(f), " ")
+
+	colors := make([]byte, 0)
+
+	for _, v := range str {
+		color, err := strconv.ParseInt(v, 16, 0)
+		if err != nil {
+			return nil, nil, err
+		}
+
+		colors = append(colors, byte(color))
+	}
+
+	// Загрузка матрицы
+	matrix, err := loadMatrix(matrixFileName, vertexCount)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// Проверка на совпадение индексов цветов в матрице
+	for i := 0; i < vertexCount; i++ {
+		for j := 0; j < vertexCount; j++ {
+			if matrix[i][j] < 0 || (matrix[i][j] > len(colors) && len(colors) != 0) {
+				return nil, nil, fmt.Errorf("Color id %d in color matrix at [%d, %d] is out of range", matrix[i][j], i, j)
+			}
+		}
+	}
+
+	return colors, matrix, nil
+}
+
+// Загружает размер, флаг ориентированности, флаг взвешенности, флаг окрашенности, имена вершин, список пути,
+// матрицу смежности графа, матрицу весов, список цветов, матрицу цветов
+func loadGraphData(fileName string) (int, bool, bool, bool, []string, []int, [][]int, [][]int, []byte, [][]int, error) {
 	// Загрузка файла-дескриптора
 	descr, err := ioutil.ReadFile(fileName)
 	if err != nil {
-		return 0, false, false, nil, nil, nil, nil, err
+		return 0, false, false, false, nil, nil, nil, nil, nil, nil, err
 	}
 
 	// Парсинг дескриптора
 	str := strings.Split(string(descr), "\r\n")
 	// Если в выражении меньше двух значений, то оно некорректно
 	if len(str) < 2 {
-		return 0, false, false, nil, nil, nil, nil, err
+		return 0, false, false, false, nil, nil, nil, nil, nil, nil, err
 	}
 
 	// Извлечение количества вершин из файла
 	vertexCount, err := strconv.Atoi(str[0])
 	if err != nil {
-		return 0, false, false, nil, nil, nil, nil, err
+		return 0, false, false, false, nil, nil, nil, nil, nil, nil, err
 	}
 
 	// Извлечение флага ориентированности
 	directionFlag, err := (strconv.Atoi(str[1]))
 	if err != nil {
-		return 0, false, false, nil, nil, nil, nil, err
+		return 0, false, false, false, nil, nil, nil, nil, nil, nil, err
 	}
 	concreteDirectionFlag := (directionFlag == 1)
 
@@ -129,20 +169,30 @@ func loadGraphData(fileName string) (int, bool, bool, []string, []int, [][]int, 
 	if len(str) >= 3 {
 		value, err := strconv.Atoi(str[2])
 		if err != nil {
-			return 0, false, false, nil, nil, nil, nil, err
+			return 0, false, false, false, nil, nil, nil, nil, nil, nil, err
 		}
 		weightFlag = (value == 1)
+	}
+
+	// Извлечение флага окрашенности, если он имеется
+	colorFlag := false
+	if len(str) >= 4 {
+		value, err := strconv.Atoi(str[3])
+		if err != nil {
+			return 0, false, false, false, nil, nil, nil, nil, nil, nil, err
+		}
+		colorFlag = (value == 1)
 	}
 
 	// Загрузка имен вершин
 	names, err := loadNames(strings.Join([]string{fileName, ".names"}, ""))
 	if err != nil {
-		return 0, false, false, nil, nil, nil, nil, err
+		return 0, false, false, false, nil, nil, nil, nil, nil, nil, err
 	}
 
 	if namesCount := len(names); namesCount != vertexCount {
 		err = fmt.Errorf("Mismatch between number of vertices and it's names: %d vs %d", vertexCount, namesCount)
-		return 0, false, false, nil, nil, nil, nil, err
+		return 0, false, false, false, nil, nil, nil, nil, nil, nil, err
 	}
 
 	path, err := loadPath(strings.Join([]string{fileName, ".path"}, ""), vertexCount)
@@ -155,7 +205,7 @@ func loadGraphData(fileName string) (int, bool, bool, []string, []int, [][]int, 
 	// Загрузка матрицы смежности
 	matrix, err := loadMatrix(strings.Join([]string{fileName, ".matrix"}, ""), vertexCount)
 	if err != nil {
-		return 0, false, false, nil, nil, nil, nil, err
+		return 0, false, false, false, nil, nil, nil, nil, nil, nil, err
 	}
 
 	// Загрузка матрицы весов
@@ -165,5 +215,16 @@ func loadGraphData(fileName string) (int, bool, bool, []string, []int, [][]int, 
 		weights = matrix
 	}
 
-	return vertexCount, concreteDirectionFlag, weightFlag, names, path, matrix, weights, nil
+	// Загрузка матрицы цветов
+	colors, colorsMatrix, err := loadColors(strings.Join([]string{fileName, ".colors"}, ""),
+		strings.Join([]string{fileName, ".cmatrix"}, ""),
+		vertexCount)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		colors = make([]byte, 0)
+		colorsMatrix = matrix
+	}
+
+	return vertexCount, concreteDirectionFlag, weightFlag, colorFlag, names, path, matrix, weights, colors, colorsMatrix, nil
 }
