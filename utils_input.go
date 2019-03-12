@@ -97,7 +97,7 @@ func loadPath(fileName string, vertexCount int) ([]int, error) {
 }
 
 // loadColors загружает список цветов вершин/ребер в формате ARGB и матрицу цветов графа
-func loadColors(colorsFileName string, matrixFileName string, vertexCount int) ([]byte, [][]int, error) {
+func loadColors(colorsFileName string, matrixFileName string, vertexCount int) ([]uint32, [][]int, error) {
 	// Загрузка списка цветов
 	f, err := ioutil.ReadFile(colorsFileName)
 	if err != nil {
@@ -106,15 +106,15 @@ func loadColors(colorsFileName string, matrixFileName string, vertexCount int) (
 
 	str := strings.Split(string(f), " ")
 
-	colors := make([]byte, 0)
+	colors := make([]uint32, 0)
 
 	for _, v := range str {
-		color, err := strconv.ParseInt(v, 16, 0)
+		color, err := strconv.ParseInt(v, 32, 0)
 		if err != nil {
 			return nil, nil, err
 		}
 
-		colors = append(colors, byte(color))
+		colors = append(colors, uint32(color))
 	}
 
 	// Загрузка матрицы
@@ -137,7 +137,7 @@ func loadColors(colorsFileName string, matrixFileName string, vertexCount int) (
 
 // Загружает размер, флаг ориентированности, флаг взвешенности, флаг окрашенности, имена вершин, список пути,
 // матрицу смежности графа, матрицу весов, список цветов, матрицу цветов
-func loadGraphData(fileName string) (int, bool, bool, bool, []string, []int, [][]int, [][]int, []byte, [][]int, error) {
+func loadGraphData(fileName string) (int, bool, bool, bool, []string, []int, [][]int, [][]int, []uint32, [][]int, error) {
 	// Загрузка файла-дескриптора
 	descr, err := ioutil.ReadFile(fileName)
 	if err != nil {
@@ -222,7 +222,7 @@ func loadGraphData(fileName string) (int, bool, bool, bool, []string, []int, [][
 
 	if err != nil {
 		fmt.Println(err.Error())
-		colors = make([]byte, 0)
+		colors = make([]uint32, 0)
 		colorsMatrix = matrix
 	}
 
