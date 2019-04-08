@@ -32,6 +32,7 @@ func loadMatrix(fileName string, matrixSize int) ([][]int, error) {
 
 	str := strings.Replace(string(f), " ", "", -1)
 	str = strings.Replace(str, "\r\n", "", -1)
+	str = strings.Replace(str, "\n", "", -1)
 	values := strings.Split(str, ",")
 	if values[len(values)-1] == "" {
 		values = values[:len(values)-1]
@@ -105,11 +106,14 @@ func loadColors(colorsFileName string, matrixFileName string, vertexCount int) (
 	}
 
 	str := strings.Split(string(f), " ")
+	if str[len(str)-1] == "" {
+		str = str[:len(str)-1]
+	}
 
 	colors := make([]uint32, 0)
 
 	for _, v := range str {
-		color, err := strconv.ParseInt(v, 32, 0)
+		color, err := strconv.ParseUint(v, 16, 32)
 		if err != nil {
 			return nil, nil, err
 		}
