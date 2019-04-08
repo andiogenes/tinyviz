@@ -27,3 +27,11 @@ example.json.descr.weights
 example.json.descr.viz.png
 tinyviz.exe
 graph_1.descr.weights
+run.cmd
+*.exe
+*.descr
+*.matrix
+*.names
+*.weights
+*.colors
+*.cmatrix
