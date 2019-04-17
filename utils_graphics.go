@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"image/color"
 	"math"
 
@@ -109,16 +108,16 @@ func drawEdge(context *gg.Context, x1, y1, x2, y2, r float64, isDirected bool, i
 }
 
 // drawWeightInfo отображает информацию о весе ребра
-func drawEdgeWeight(context *gg.Context, weight int, x1, y1, x2, y2 float64) {
+func drawEdgeWeight(context *gg.Context, weight string, x1, y1, x2, y2 float64) {
 	medianX, medianY := (x2-x1)/2., (y2-y1)/2.
 
-	strW, strH := context.MeasureString(fmt.Sprintf("%d", weight))
+	strW, strH := context.MeasureString(weight)
 
 	context.SetRGBA255(255, 135, 245, 175)
 	context.DrawRectangle(x1+medianX, y1+medianY-strH, strW, strH)
 	context.Fill()
 	context.SetRGB255(145, 35, 185)
-	context.DrawString(fmt.Sprintf("%d", weight), x1+medianX, y1+medianY)
+	context.DrawString(weight, x1+medianX, y1+medianY)
 }
 
 type vertex2D struct {
@@ -128,7 +127,7 @@ type vertex2D struct {
 }
 
 // renderGraph рисует по заданным данным граф и сохраняет изображение в png-файл output
-func renderGraph(output string, vertexCount int, isDirected bool, isWeighted bool, isColored bool, names []string, path []int, matrix [][]int, weights [][]int, colors []uint32, colorCover [][]int) {
+func renderGraph(output string, vertexCount int, isDirected bool, isWeighted bool, isColored bool, names []string, path []int, matrix [][]int, weights [][]string, colors []uint32, colorCover [][]int) {
 	positions := make([]vertex2D, vertexCount)
 	combination := randomCombination(vertexCount*vertexCount, vertexCount)
 
