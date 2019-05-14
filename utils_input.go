@@ -15,7 +15,7 @@ func loadNames(fileName string) ([]string, error) {
 		return nil, err
 	}
 
-	names := strings.Split(string(f), "\r\n")
+	names := strings.Split(strings.Replace(string(f), "\r", "", -1), "\n")
 	if names[len(names)-1] == "" {
 		names = names[:len(names)-1]
 	}
@@ -204,7 +204,7 @@ func loadGraphData(fileName string) (int, bool, bool, bool, []string, []int, [][
 	}
 
 	// Парсинг дескриптора
-	str := strings.Split(string(descr), "\r\n")
+	str := strings.Split(strings.Replace(string(descr), "\r", "", -1), "\n")
 	// Если в выражении меньше двух значений, то оно некорректно
 	if len(str) < 2 {
 		return 0, false, false, false, nil, nil, nil, nil, nil, nil, err
