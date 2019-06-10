@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"graph-labs/tinyviz/legacy"
+	"graph-labs/tinyviz/random"
 	"log"
 	"sync"
 )
@@ -14,7 +15,7 @@ func visualize(fileName string) error {
 		return err
 	}
 
-	shuffleSeed()
+	random.ShuffleSeed()
 
 	renderGraph(fmt.Sprintf("%s.viz.png", fileName), count, isDirected, isWeighted, isColored, names, path, matrix, weights, colors, colorMatrix)
 	fmt.Printf("%s visualizated\n", fileName)
