@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"graph-labs/tinyviz/graphics"
 	"os"
 	"path/filepath"
 )
@@ -33,4 +35,16 @@ func getDescriptors() ([]string, error) {
 	}
 
 	return files, nil
+}
+
+// pickFormat ...
+func pickFormat(extension string) (graphics.ImageFormat, error) {
+	switch extension {
+	case "png":
+		return graphics.Png, nil
+	case "jpg", "jpeg":
+		return graphics.Jpeg, nil
+	default:
+		return graphics.Png, fmt.Errorf("Incorrect argument: excepted \"png\", \"jpg\" or \"jpeg\", given \"%s\"", extension)
+	}
 }
