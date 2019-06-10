@@ -10,7 +10,7 @@ import (
 )
 
 // visualize визуализирует граф на основе информации из дескриптора
-func visualize(fileName string) error {
+func visualize(fileName string, format graphics.ImageFormat, quality int) error {
 	options, err := input.LoadGraphData(fileName)
 	if err != nil {
 		options, err = legacy.LoadGraphData(fileName)
@@ -20,14 +20,14 @@ func visualize(fileName string) error {
 		return err
 	}
 
-	graphics.RenderGraph(fmt.Sprintf("%s.viz.png", fileName), &options)
+	graphics.RenderGraph(fmt.Sprintf("%s.viz.%s", fileName, format.Stringify()), &options, format, quality)
 	fmt.Printf("%s visualizated\n", fileName)
 
 	return nil
 }
 
 // visualizeFolder ищет все дескрипторы графов в папке и визуализирует все графы по ним
-func visualizeFolder() {
+func visualizeFolder(format graphics.ImageFormat, quality int) {
 	descriptors, err := getDescriptors()
 	if err != nil {
 		log.Fatal(err)
@@ -38,7 +38,7 @@ func visualizeFolder() {
 
 	for _, val := range descriptors {
 		go func(fileName string) {
-			if err := visualize(fileName); err != nil {
+			if err := visualize(fileName, format, quality); err != nil {
 				log.Printf("Unable to process %s: %s\n", fileName, err.Error())
 			}
 			wg.Done()

@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"graph-labs/tinyviz/random"
 	"image/color"
+
+	"github.com/fogleman/gg"
 )
 
 // RenderGraph рисует по заданным данным граф и сохраняет изображение в png-файл output
-func RenderGraph(output string, options *RenderOptions) error {
+func RenderGraph(output string, options *RenderOptions, format ImageFormat, quality int) error {
 	if options == nil {
 		return fmt.Errorf("Nil argument passed")
 	}
@@ -63,7 +65,11 @@ func RenderGraph(output string, options *RenderOptions) error {
 	context.DrawString(output, float64(imgSide)-outW-8, float64(imgSide)-outH+8)
 	context.Pop()
 
-	context.SavePNG(output)
+	if format == Png {
+		context.SavePNG(output)
+	} else {
+		gg.SaveJPG(output, context.Image(), quality)
+	}
 
 	return nil
 }

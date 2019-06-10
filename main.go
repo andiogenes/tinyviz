@@ -50,12 +50,17 @@ func main() {
 
 		random.ShuffleSeed()
 
-		if c.NArg() > 0 {
-			err := visualize(c.Args()[0])
+		imgFormat, err := pickFormat(format)
+		if err != nil {
 			return err
 		}
 
-		visualizeFolder()
+		if c.NArg() > 0 {
+			err := visualize(c.Args()[0], imgFormat, quality)
+			return err
+		}
+
+		visualizeFolder(imgFormat, quality)
 
 		return nil
 	}
