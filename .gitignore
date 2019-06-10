@@ -35,3 +35,4 @@ run.cmd
 *.weights
 *.colors
 *.cmatrix
+graph-store-example.json
