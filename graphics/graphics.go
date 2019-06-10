@@ -33,7 +33,10 @@ func generateContext(width, height int) *gg.Context {
 
 // convertColor разделяет цвет из RGBA255 по соответствующим компонентам (Red, Green, Blue, alpha)
 func convertColor(colorRgba uint32) (int, int, int, int) {
-	return int((colorRgba >> 24) & 0x000000ff), int((colorRgba >> 16) & 0x000000ff), int((colorRgba >> 8) & 0x000000ff), int(colorRgba & 0x000000ff)
+	return int((colorRgba >> 24) & 0x000000ff),
+		int((colorRgba >> 16) & 0x000000ff),
+		int((colorRgba >> 8) & 0x000000ff),
+		int(colorRgba & 0x000000ff)
 }
 
 // drawVertex рисует вершину графа
