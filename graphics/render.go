@@ -6,40 +6,40 @@ import (
 )
 
 // RenderGraph рисует по заданным данным граф и сохраняет изображение в png-файл output
-func RenderGraph(output string, vertexCount int, isDirected bool, isWeighted bool, isColored bool, names []string, path []int, matrix [][]int, weights [][]string, colors []uint32, colorCover [][]int) {
-	positions := make([]vertex2D, vertexCount)
-	combination := random.Combination(vertexCount*vertexCount, vertexCount)
+func RenderGraph(output string, options RenderOptions) {
+	positions := make([]vertex2D, options.VertexCount)
+	combination := random.Combination(options.VertexCount*options.VertexCount, options.VertexCount)
 
 	// imgSide := vertexCount * CellSide
-	imgSide := (vertexCount + 1) * CellSide
+	imgSide := (options.VertexCount + 1) * CellSide
 
-	for i := 0; i < vertexCount; i++ {
-		positions[i].x = float64(combination[i]%vertexCount+1) * CellSide
-		positions[i].y = float64(combination[i]/vertexCount+1) * CellSide
+	for i := 0; i < options.VertexCount; i++ {
+		positions[i].x = float64(combination[i]%options.VertexCount+1) * CellSide
+		positions[i].y = float64(combination[i]/options.VertexCount+1) * CellSide
 		positions[i].inPath = false
 	}
 
-	for _, val := range path {
+	for _, val := range options.Path {
 		positions[val].inPath = true
 	}
 
 	context := generateContext(imgSide, imgSide)
 
-	for i := 0; i < vertexCount; i++ {
-		drawVertex(context, names[i], positions[i].x, positions[i].y, VertexRadius, positions[i].inPath, isColored, colors, colorCover[i][i])
-		for j := 0; j < vertexCount; j++ {
-			if matrix[i][j] == 1 {
-				drawEdge(context, positions[i].x, positions[i].y, positions[j].x, positions[j].y, VertexRadius, isDirected, isColored, colors, colorCover[i][j])
-				if isWeighted {
-					drawEdgeWeight(context, weights[i][j], positions[i].x, positions[i].y, positions[j].x, positions[j].y)
+	for i := 0; i < options.VertexCount; i++ {
+		drawVertex(context, options.Names[i], positions[i].x, positions[i].y, VertexRadius, positions[i].inPath, options.Colored, options.Colors, options.ColorCover[i][i])
+		for j := 0; j < options.VertexCount; j++ {
+			if options.Matrix[i][j] == 1 {
+				drawEdge(context, positions[i].x, positions[i].y, positions[j].x, positions[j].y, VertexRadius, options.Directed, options.Colored, options.Colors, options.ColorCover[i][j])
+				if options.Weighted {
+					drawEdgeWeight(context, options.Weights[i][j], positions[i].x, positions[i].y, positions[j].x, positions[j].y)
 				}
 			}
 		}
 	}
 
-	if len(path) > 0 {
-		firstPathID := path[0]
-		lastPathID := path[len(path)-1]
+	if len(options.Path) > 0 {
+		firstPathID := options.Path[0]
+		lastPathID := options.Path[len(options.Path)-1]
 
 		context.SetRGB255(0, 0, 255)
 		context.DrawCircle(positions[firstPathID].x, positions[firstPathID].y, VertexRadius)
