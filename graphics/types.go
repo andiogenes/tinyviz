@@ -1,12 +1,26 @@
 package graphics
 
-// imageFormat represents format of rendering image
-type imageFormat byte
+// ImageFormat represents format of rendering image
+type ImageFormat byte
 
 const (
-	png imageFormat = iota
-	jpeg
+	// Png represents ...
+	Png ImageFormat = iota
+	// Jpeg represents ...
+	Jpeg
 )
+
+// Stringify ...
+func (f ImageFormat) Stringify() string {
+	switch f {
+	case Png:
+		return "png"
+	case Jpeg:
+		return "jpeg"
+	}
+
+	return ""
+}
 
 // RenderOptions ...
 type RenderOptions struct {
