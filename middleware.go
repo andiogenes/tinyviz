@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"graph-labs/tinyviz/graphics"
+	"graph-labs/tinyviz/input"
 	"graph-labs/tinyviz/legacy"
 	"log"
 	"sync"
@@ -10,12 +11,16 @@ import (
 
 // visualize визуализирует граф на основе информации из дескриптора
 func visualize(fileName string) error {
-	count, isDirected, isWeighted, isColored, names, path, matrix, weights, colors, colorMatrix, err := legacy.LoadGraphData(fileName)
+	options, err := input.LoadGraphData(fileName)
+	if err != nil {
+		options, err = legacy.LoadGraphData(fileName)
+	}
+
 	if err != nil {
 		return err
 	}
 
-	graphics.RenderGraph(fmt.Sprintf("%s.viz.png", fileName), count, isDirected, isWeighted, isColored, names, path, matrix, weights, colors, colorMatrix)
+	graphics.RenderGraph(fmt.Sprintf("%s.viz.png", fileName), &options)
 	fmt.Printf("%s visualizated\n", fileName)
 
 	return nil
