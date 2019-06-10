@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"graph-labs/tinyviz/random"
 	"log"
 	"os"
 
@@ -46,6 +47,8 @@ func main() {
 			fmt.Println("Unbounded quality value ", quality, ", reset to 80")
 			quality = 80
 		}
+
+		random.ShuffleSeed()
 
 		if c.NArg() > 0 {
 			err := visualize(c.Args()[0])
