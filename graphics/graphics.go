@@ -122,9 +122,3 @@ func drawEdgeWeight(context *gg.Context, weight string, x1, y1, x2, y2 float64) 
 	context.SetRGB255(145, 35, 185)
 	context.DrawString(weight, x1+medianX, y1+medianY)
 }
-
-type vertex2D struct {
-	x      float64
-	y      float64
-	inPath bool
-}
