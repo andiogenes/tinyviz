@@ -1,12 +1,17 @@
 package graphics
 
 import (
+	"fmt"
 	"graph-labs/tinyviz/random"
 	"image/color"
 )
 
 // RenderGraph рисует по заданным данным граф и сохраняет изображение в png-файл output
-func RenderGraph(output string, options RenderOptions) {
+func RenderGraph(output string, options *RenderOptions) error {
+	if options == nil {
+		return fmt.Errorf("Nil argument passed")
+	}
+
 	positions := make([]vertex2D, options.VertexCount)
 	combination := random.Combination(options.VertexCount*options.VertexCount, options.VertexCount)
 
@@ -59,4 +64,6 @@ func RenderGraph(output string, options RenderOptions) {
 	context.Pop()
 
 	context.SavePNG(output)
+
+	return nil
 }
