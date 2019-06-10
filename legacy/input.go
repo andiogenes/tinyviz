@@ -1,4 +1,4 @@
-package main
+package legacy
 
 import (
 	"errors"
@@ -8,8 +8,8 @@ import (
 	"strings"
 )
 
-// loadNames загружает список имен вершин из файла
-func loadNames(fileName string) ([]string, error) {
+// LoadNames загружает список имен вершин из файла
+func LoadNames(fileName string) ([]string, error) {
 	f, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		return nil, err
@@ -23,8 +23,8 @@ func loadNames(fileName string) ([]string, error) {
 	return names, nil
 }
 
-// loadMatrix загружает матрицу смежности/весов графа из файла
-func loadMatrix(fileName string, matrixSize int) ([][]int, error) {
+// LoadMatrix загружает матрицу смежности/весов графа из файла
+func LoadMatrix(fileName string, matrixSize int) ([][]int, error) {
 	f, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		return nil, err
@@ -65,8 +65,8 @@ func loadMatrix(fileName string, matrixSize int) ([][]int, error) {
 	return matrix, nil
 }
 
-// loadStringMatrix загружает матрицу со строчными значениями из файла
-func loadStringMatrix(fileName string, matrixSize int) ([][]string, error) {
+// LoadStringMatrix загружает матрицу со строчными значениями из файла
+func LoadStringMatrix(fileName string, matrixSize int) ([][]string, error) {
 	f, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		return nil, err
@@ -104,8 +104,8 @@ func loadStringMatrix(fileName string, matrixSize int) ([][]string, error) {
 	return matrix, nil
 }
 
-// stringifyMatrix конвертирует числовую матрицу в строчную
-func stringifyMatrix(matrix [][]int) [][]string {
+// StringifyMatrix конвертирует числовую матрицу в строчную
+func StringifyMatrix(matrix [][]int) [][]string {
 	out := make([][]string, len(matrix))
 
 	lenMatrix := len(matrix)
@@ -120,8 +120,8 @@ func stringifyMatrix(matrix [][]int) [][]string {
 	return out
 }
 
-// loadPath загружает список вершин в маршруте из файла
-func loadPath(fileName string, vertexCount int) ([]int, error) {
+// LoadPath загружает список вершин в маршруте из файла
+func LoadPath(fileName string, vertexCount int) ([]int, error) {
 	f, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		return nil, err
@@ -152,8 +152,8 @@ func loadPath(fileName string, vertexCount int) ([]int, error) {
 	return path, nil
 }
 
-// loadColors загружает список цветов вершин/ребер в формате ARGB и матрицу цветов графа
-func loadColors(colorsFileName string, matrixFileName string, vertexCount int) ([]uint32, [][]int, error) {
+// LoadColors загружает список цветов вершин/ребер в формате ARGB и матрицу цветов графа
+func LoadColors(colorsFileName string, matrixFileName string, vertexCount int) ([]uint32, [][]int, error) {
 	// Загрузка списка цветов
 	f, err := ioutil.ReadFile(colorsFileName)
 	if err != nil {
@@ -177,7 +177,7 @@ func loadColors(colorsFileName string, matrixFileName string, vertexCount int) (
 	}
 
 	// Загрузка матрицы
-	matrix, err := loadMatrix(matrixFileName, vertexCount)
+	matrix, err := LoadMatrix(matrixFileName, vertexCount)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -194,9 +194,9 @@ func loadColors(colorsFileName string, matrixFileName string, vertexCount int) (
 	return colors, matrix, nil
 }
 
-// Загружает размер, флаг ориентированности, флаг взвешенности, флаг окрашенности, имена вершин, список пути,
-// матрицу смежности графа, матрицу весов, список цветов, матрицу цветов
-func loadGraphData(fileName string) (int, bool, bool, bool, []string, []int, [][]int, [][]string, []uint32, [][]int, error) {
+// LoadGraphData загружает размер, флаг ориентированности, флаг взвешенности, флаг окрашенности,
+// имена вершин, список пути, матрицу смежности графа, матрицу весов, список цветов, матрицу цветов
+func LoadGraphData(fileName string) (int, bool, bool, bool, []string, []int, [][]int, [][]string, []uint32, [][]int, error) {
 	// Загрузка файла-дескриптора
 	descr, err := ioutil.ReadFile(fileName)
 	if err != nil {
@@ -244,7 +244,7 @@ func loadGraphData(fileName string) (int, bool, bool, bool, []string, []int, [][
 	}
 
 	// Загрузка имен вершин
-	names, err := loadNames(strings.Join([]string{fileName, ".names"}, ""))
+	names, err := LoadNames(strings.Join([]string{fileName, ".names"}, ""))
 	if err != nil {
 		return 0, false, false, false, nil, nil, nil, nil, nil, nil, err
 	}
@@ -254,7 +254,7 @@ func loadGraphData(fileName string) (int, bool, bool, bool, []string, []int, [][
 		return 0, false, false, false, nil, nil, nil, nil, nil, nil, err
 	}
 
-	path, err := loadPath(strings.Join([]string{fileName, ".path"}, ""), vertexCount)
+	path, err := LoadPath(strings.Join([]string{fileName, ".path"}, ""), vertexCount)
 	if err != nil {
 		//return 0, false, nil, nil, nil, err
 		fmt.Println(err.Error())
@@ -262,20 +262,20 @@ func loadGraphData(fileName string) (int, bool, bool, bool, []string, []int, [][
 	}
 
 	// Загрузка матрицы смежности
-	matrix, err := loadMatrix(strings.Join([]string{fileName, ".matrix"}, ""), vertexCount)
+	matrix, err := LoadMatrix(strings.Join([]string{fileName, ".matrix"}, ""), vertexCount)
 	if err != nil {
 		return 0, false, false, false, nil, nil, nil, nil, nil, nil, err
 	}
 
 	// Загрузка матрицы весов
-	weights, err := loadStringMatrix(strings.Join([]string{fileName, ".weights"}, ""), vertexCount)
+	weights, err := LoadStringMatrix(strings.Join([]string{fileName, ".weights"}, ""), vertexCount)
 	if err != nil {
 		fmt.Println(err.Error())
-		weights = stringifyMatrix(matrix)
+		weights = StringifyMatrix(matrix)
 	}
 
 	// Загрузка матрицы цветов
-	colors, colorsMatrix, err := loadColors(strings.Join([]string{fileName, ".colors"}, ""),
+	colors, colorsMatrix, err := LoadColors(strings.Join([]string{fileName, ".colors"}, ""),
 		strings.Join([]string{fileName, ".cmatrix"}, ""),
 		vertexCount)
 

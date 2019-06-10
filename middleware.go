@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
+	"graph-labs/tinyviz/legacy"
 	"log"
 	"sync"
 )
 
 // visualize визуализирует граф на основе информации из дескриптора
 func visualize(fileName string) error {
-	count, isDirected, isWeighted, isColored, names, path, matrix, weights, colors, colorMatrix, err := loadGraphData(fileName)
+	count, isDirected, isWeighted, isColored, names, path, matrix, weights, colors, colorMatrix, err := legacy.LoadGraphData(fileName)
 	if err != nil {
 		return err
 	}
