@@ -20,7 +20,10 @@ func visualize(fileName string, format graphics.ImageFormat, quality int) error 
 		return err
 	}
 
-	graphics.RenderGraph(fmt.Sprintf("%s.viz.%s", fileName, format.Stringify()), &options, format, quality)
+	err = graphics.RenderGraph(fmt.Sprintf("%s.viz.%s", fileName, format.Stringify()), &options, format, quality)
+	if err != nil {
+		return err
+	}
 	fmt.Printf("%s visualizated\n", fileName)
 
 	return nil
