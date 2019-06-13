@@ -56,21 +56,20 @@ func drawVertex(context *gg.Context, name string, x, y, r float64, red, green, b
 }
 
 // drawEdge рисует ребро графа
-func drawEdge(context *gg.Context, x1, y1, x2, y2, r float64, isDirected bool, isColored bool, colors []uint32, colorIndex int) {
+func drawEdge(context *gg.Context, x1, y1, x2, y2, r float64, isDirected bool, red, green, blue, alpha int) {
+	// Compute vector colinear with line (x1,y1)->(x2,y2)
+	// Needed to line and arrows drawing
 	vecX, vecY := float64(x2-x1), float64(y2-y1)
 	vecLen := math.Sqrt(vecX*vecX + vecY*vecY)
-	// Преобразование длины вектора в r
 	vecX, vecY = (vecX/vecLen)*r, (vecY/vecLen)*r
 
-	if isColored && colorIndex != 0 {
-		context.SetRGBA255(convertColor(colors[colorIndex-1]))
-	} else {
-		context.SetColor(color.Black)
-	}
+	// Draw line
+	context.SetRGBA255(red, green, blue, alpha)
 	context.SetLineWidth(1.2)
 	context.DrawLine(x1+vecX, y1+vecY, x2-vecX, y2-vecY)
 	context.Stroke()
 
+	// If edge is directed, draw arrow near to (x2,y2) vertex
 	if isDirected {
 		var normX, normY float64
 
@@ -93,11 +92,8 @@ func drawEdge(context *gg.Context, x1, y1, x2, y2, r float64, isDirected bool, i
 		context.LineTo(x2-vecX*1.5+normX, y2-vecY*1.5+normY)
 		context.LineTo(x2-vecX*1.5-normX, y2-vecY*1.5-normY)
 		context.LineTo(x2-vecX, y2-vecY)
-		if isColored && colorIndex != 0 {
-			context.SetRGBA255(convertColor(colors[colorIndex-1]))
-		} else {
-			context.SetColor(color.Black)
-		}
+
+		context.SetRGBA255(red, green, blue, alpha)
 		context.Fill()
 	}
 }
