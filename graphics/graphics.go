@@ -110,3 +110,17 @@ func drawEdgeWeight(context *gg.Context, weight string, x1, y1, x2, y2 float64) 
 	context.SetRGB255(145, 35, 185)
 	context.DrawString(weight, x1+medianX, y1+medianY)
 }
+
+// pickColor
+func pickColor(colors []uint32, coverIndex int, inPath bool) (r, g, b, a int) {
+	switch true {
+	case coverIndex > 0:
+		r, g, b, a = convertColor(colors[coverIndex])
+	case inPath:
+		r, g, b, a = 255-VertexColorRed, 255-VertexColorGreen, 255-VertexColorBlue, VertexColorAlpha
+	default:
+		r, g, b, a = VertexColorRed, VertexColorGreen, VertexColorBlue, VertexColorAlpha
+	}
+
+	return
+}
