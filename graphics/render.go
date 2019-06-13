@@ -2,41 +2,40 @@ package graphics
 
 import (
 	"fmt"
-	"graph-labs/tinyviz/random"
 	"image/color"
 
 	"github.com/fogleman/gg"
 )
 
 // RenderGraph рисует по заданным данным граф и сохраняет изображение в png-файл output
-func RenderGraph(output string, options *RenderOptions, format ImageFormat, quality int) error {
+func RenderGraph(output string, options *RenderOptions, arrangeFn func([]vertex2D, RenderOptions), format ImageFormat, quality int) error {
 	if options == nil {
 		return fmt.Errorf("Nil argument passed")
 	}
 
+	// Initialize helper variables
 	positions := make([]vertex2D, options.VertexCount)
-	combination := random.Combination(options.VertexCount*options.VertexCount, options.VertexCount)
-
-	// imgSide := vertexCount * CellSide
 	imgSide := (options.VertexCount + 1) * CellSide
+	context := generateContext(imgSide, imgSide)
 
-	for i := 0; i < options.VertexCount; i++ {
-		positions[i].x = float64(combination[i]%options.VertexCount+1) * CellSide
-		positions[i].y = float64(combination[i]/options.VertexCount+1) * CellSide
-		positions[i].inPath = false
-	}
+	// Set position of vertices by some rule
+	arrangeFn(positions, *options)
 
+	// Marks path vertices
 	for _, val := range options.Path {
 		positions[val].inPath = true
 	}
 
-	context := generateContext(imgSide, imgSide)
-
+	// Vertex and edges rendering
 	for i := 0; i < options.VertexCount; i++ {
-		drawVertex(context, options.Names[i], positions[i].x, positions[i].y, VertexRadius, positions[i].inPath, options.Colored, options.Colors, options.ColorCover[i][i])
+		r, g, b, a := pickColor(options.Colors, options.ColorCover[i][i], positions[i].inPath)
+		drawVertex(context, options.Names[i], positions[i].x, positions[i].y, VertexRadius, r, g, b, a)
+
 		for j := 0; j < options.VertexCount; j++ {
 			if options.Matrix[i][j] == 1 {
-				drawEdge(context, positions[i].x, positions[i].y, positions[j].x, positions[j].y, VertexRadius, options.Directed, options.Colored, options.Colors, options.ColorCover[i][j])
+				r, g, b, a := pickColor(options.Colors, options.ColorCover[i][j], false)
+				drawEdge(context, positions[i].x, positions[i].y, positions[j].x, positions[j].y, VertexRadius, options.Directed, r, g, b, a)
+
 				if options.Weighted {
 					drawEdgeWeight(context, options.Weights[i][j], positions[i].x, positions[i].y, positions[j].x, positions[j].y)
 				}
@@ -44,6 +43,7 @@ func RenderGraph(output string, options *RenderOptions, format ImageFormat, qual
 		}
 	}
 
+	// Highlight first and last elements of path
 	if len(options.Path) > 0 {
 		firstPathID := options.Path[0]
 		lastPathID := options.Path[len(options.Path)-1]
@@ -57,6 +57,7 @@ func RenderGraph(output string, options *RenderOptions, format ImageFormat, qual
 		context.Stroke()
 	}
 
+	// Write information about rendered graph
 	context.SetColor(color.Black)
 	context.DrawString("Original Graph", 10, 15)
 	outW, outH := context.MeasureString(output)
