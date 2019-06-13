@@ -40,27 +40,19 @@ func convertColor(colorRgba uint32) (int, int, int, int) {
 }
 
 // drawVertex рисует вершину графа
-func drawVertex(context *gg.Context, name string, x, y, r float64, inPath bool, isColored bool, colors []uint32, colorIndex int) {
+func drawVertex(context *gg.Context, name string, x, y, r float64, red, green, blue, alpha int) {
 	context.DrawCircle(x, y, r)
 	context.SetColor(color.Black)
 	context.SetLineWidth(2)
 	context.StrokePreserve()
-	if !inPath {
-		if isColored && colorIndex != 0 {
-			context.SetRGBA255(convertColor(colors[colorIndex-1]))
-		} else {
-			context.SetRGBA255(VertexColorRed, VertexColorGreen, VertexColorBlue, VertexColorAlpha)
-		}
-	} else {
-		context.SetRGBA255(255-VertexColorRed, 255-VertexColorGreen, 255-VertexColorBlue, VertexColorAlpha)
-	}
+
+	context.SetRGBA255(red, green, blue, alpha)
 	context.Fill()
 	context.SetColor(color.Black)
 
 	strW, strH := context.MeasureString(name)
 
 	context.DrawString(name, x+r/2.-strW*1.5, y+r/2.-strH/2.)
-	// context.DrawString(name, x-strW/2., y-r/2.+strH/2.)
 }
 
 // drawEdge рисует ребро графа
