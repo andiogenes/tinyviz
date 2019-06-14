@@ -112,14 +112,16 @@ func drawEdgeWeight(context *gg.Context, weight string, x1, y1, x2, y2 float64) 
 }
 
 // pickColor
-func pickColor(isColored bool, colors []uint32, coverIndex int, inPath bool) (r, g, b, a int) {
+func pickColor(isColored bool, colors []uint32, coverIndex int, inPath bool, elementType graphElement) (r, g, b, a int) {
 	switch true {
 	case coverIndex > 0 && isColored:
 		r, g, b, a = convertColor(colors[coverIndex-1])
 	case inPath:
 		r, g, b, a = 255-VertexColorRed, 255-VertexColorGreen, 255-VertexColorBlue, VertexColorAlpha
-	default:
+	case elementType == geVertex:
 		r, g, b, a = VertexColorRed, VertexColorGreen, VertexColorBlue, VertexColorAlpha
+	default:
+		r, g, b, a = 0, 0, 0, 255
 	}
 
 	return
