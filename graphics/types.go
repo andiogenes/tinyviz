@@ -52,3 +52,11 @@ type vertex2D struct {
 	y      float64
 	inPath bool
 }
+
+// graphElement ...
+type graphElement byte
+
+const (
+	geVertex graphElement = iota
+	geEdge
+)
