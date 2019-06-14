@@ -1,8 +1,9 @@
-package main
+package legacy
 
 import (
 	"errors"
 	"fmt"
+	"graph-labs/tinyviz/graphics"
 	"io/ioutil"
 	"strconv"
 	"strings"
@@ -194,8 +195,31 @@ func loadColors(colorsFileName string, matrixFileName string, vertexCount int) (
 	return colors, matrix, nil
 }
 
-// Загружает размер, флаг ориентированности, флаг взвешенности, флаг окрашенности, имена вершин, список пути,
-// матрицу смежности графа, матрицу весов, список цветов, матрицу цветов
+// LoadGraphData parses set of text documents and returns information about graph or error
+func LoadGraphData(fileName string) (graphics.RenderOptions, error) {
+	count, isDirected, isWeighted, isColored, names, path, matrix, weights, colors, colorMatrix, err := loadGraphData(fileName)
+	if err != nil {
+		return graphics.RenderOptions{}, err
+	}
+
+	retVal := graphics.RenderOptions{
+		VertexCount: count,
+		Directed:    isDirected,
+		Weighted:    isWeighted,
+		Colored:     isColored,
+		Names:       names,
+		Path:        path,
+		Matrix:      matrix,
+		Weights:     weights,
+		Colors:      colors,
+		ColorCover:  colorMatrix,
+	}
+
+	return retVal, nil
+}
+
+// loadGraphData загружает размер, флаг ориентированности, флаг взвешенности, флаг окрашенности,
+// имена вершин, список пути, матрицу смежности графа, матрицу весов, список цветов, матрицу цветов
 func loadGraphData(fileName string) (int, bool, bool, bool, []string, []int, [][]int, [][]string, []uint32, [][]int, error) {
 	// Загрузка файла-дескриптора
 	descr, err := ioutil.ReadFile(fileName)
