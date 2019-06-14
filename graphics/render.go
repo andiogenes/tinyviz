@@ -28,12 +28,12 @@ func RenderGraph(output string, options *RenderOptions, arrangeFn func([]vertex2
 
 	// Vertex and edges rendering
 	for i := 0; i < options.VertexCount; i++ {
-		r, g, b, a := pickColor(options.Colors, options.ColorCover[i][i], positions[i].inPath)
+		r, g, b, a := pickColor(options.Colored, options.Colors, options.ColorCover[i][i], positions[i].inPath)
 		drawVertex(context, options.Names[i], positions[i].x, positions[i].y, VertexRadius, r, g, b, a)
 
 		for j := 0; j < options.VertexCount; j++ {
 			if options.Matrix[i][j] == 1 {
-				r, g, b, a := pickColor(options.Colors, options.ColorCover[i][j], false)
+				r, g, b, a := pickColor(options.Colored, options.Colors, options.ColorCover[i][j], false)
 				drawEdge(context, positions[i].x, positions[i].y, positions[j].x, positions[j].y, VertexRadius, options.Directed, r, g, b, a)
 
 				if options.Weighted {
