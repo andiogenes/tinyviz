@@ -20,6 +20,7 @@ func visualize(fileName string, format graphics.ImageFormat, quality int, arrang
 		return err
 	}
 
+	// Tries to load additional data from file with name fileName by dataLoaderFn
 	var data interface{}
 	if dataLoaderFn != nil {
 		data, err = dataLoaderFn(fileName)
