@@ -22,14 +22,14 @@ func PutVertexInRandomFreeCell(positions []Vertex2D, options RenderOptions, addi
 
 // PutVertexAtPosition ...
 func PutVertexAtPosition(positions []Vertex2D, options RenderOptions, additionalData interface{}) error {
-	data, correct := additionalData.(struct{ coords [][]int })
+	data, correct := additionalData.([][]int)
 	if !correct {
-		return fmt.Errorf("Type assertion failed - given data doesn't represent type struct {[][]int}")
+		return fmt.Errorf("Type assertion failed - given data doesn't represent type [][]int")
 	}
 
 	for i := 0; i < options.VertexCount; i++ {
-		positions[i].x = float64(data.coords[i][0])
-		positions[i].y = float64(data.coords[i][1])
+		positions[i].x = float64(data[i][0])
+		positions[i].y = float64(data[i][1])
 		positions[i].inPath = false
 	}
 
