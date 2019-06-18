@@ -35,6 +35,12 @@ func main() {
 			Usage:       "jpeg image ouput quality (from 0 to 100)",
 			Destination: &quality,
 		},
+		cli.StringFlag{
+			Name:        "arrangement, a",
+			Value:       "random",
+			Usage:       "image vertex arrangement (random/coord)",
+			Destination: &arrangement,
+		},
 	}
 
 	app.Action = func(c *cli.Context) error {
@@ -46,6 +52,11 @@ func main() {
 		if quality <= 0 || quality > 100 {
 			fmt.Println("Unbounded quality value ", quality, ", reset to 80")
 			quality = 80
+		}
+
+		if arrangement != "random" && arrangement != "coord" {
+			fmt.Println("Unknown arrangement type \"", arrangement, "\", reset to \"random\"")
+			arrangement = "random"
 		}
 
 		random.ShuffleSeed()
