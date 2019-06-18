@@ -5,7 +5,7 @@ package graphics
 import "graph-labs/tinyviz/random"
 
 // PutVertexInRandomFreeCell ...
-func PutVertexInRandomFreeCell(positions []vertex2D, options RenderOptions) {
+func PutVertexInRandomFreeCell(positions []Vertex2D, options RenderOptions) {
 	combination := random.Combination(options.VertexCount*options.VertexCount, options.VertexCount)
 
 	for i := 0; i < options.VertexCount; i++ {

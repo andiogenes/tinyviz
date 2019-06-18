@@ -8,13 +8,13 @@ import (
 )
 
 // RenderGraph рисует по заданным данным граф и сохраняет изображение в png-файл output
-func RenderGraph(output string, options *RenderOptions, arrangeFn func([]vertex2D, RenderOptions), format ImageFormat, quality int) error {
+func RenderGraph(output string, options *RenderOptions, arrangeFn func([]Vertex2D, RenderOptions), format ImageFormat, quality int) error {
 	if options == nil {
 		return fmt.Errorf("Nil argument passed")
 	}
 
 	// Initialize helper variables
-	positions := make([]vertex2D, options.VertexCount)
+	positions := make([]Vertex2D, options.VertexCount)
 	imgSide := (options.VertexCount + 1) * CellSide
 	context := generateContext(imgSide, imgSide)
 

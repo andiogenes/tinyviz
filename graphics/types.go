@@ -46,8 +46,8 @@ type RenderOptions struct {
 	ColorCover [][]int
 }
 
-// vertex2D represents ...
-type vertex2D struct {
+// Vertex2D represents ...
+type Vertex2D struct {
 	x      float64
 	y      float64
 	inPath bool
