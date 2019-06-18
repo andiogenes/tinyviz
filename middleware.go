@@ -10,7 +10,7 @@ import (
 )
 
 // visualize визуализирует граф на основе информации из дескриптора
-func visualize(fileName string, format graphics.ImageFormat, quality int) error {
+func visualize(fileName string, format graphics.ImageFormat, quality int, arrangeFn graphics.ArrangementFn, dataLoaderFn input.ArrangementLoader) error {
 	options, err := input.LoadGraphData(fileName)
 	if err != nil {
 		options, err = legacy.LoadGraphData(fileName)
@@ -20,7 +20,17 @@ func visualize(fileName string, format graphics.ImageFormat, quality int) error 
 		return err
 	}
 
-	err = graphics.RenderGraph(fmt.Sprintf("%s.viz.%s", fileName, format.Stringify()), &options, graphics.PutVertexInRandomFreeCell, format, quality)
+	var data interface{}
+	if dataLoaderFn != nil {
+		data, err = dataLoaderFn(fileName)
+		if err != nil {
+			return err
+		}
+	} else {
+		data = nil
+	}
+
+	err = graphics.RenderGraph(fmt.Sprintf("%s.viz.%s", fileName, format.Stringify()), &options, arrangeFn, data, format, quality)
 	if err != nil {
 		return err
 	}
@@ -30,7 +40,7 @@ func visualize(fileName string, format graphics.ImageFormat, quality int) error 
 }
 
 // visualizeFolder ищет все дескрипторы графов в папке и визуализирует все графы по ним
-func visualizeFolder(format graphics.ImageFormat, quality int) {
+func visualizeFolder(format graphics.ImageFormat, quality int, arrangeFn graphics.ArrangementFn, dataLoaderFn input.ArrangementLoader) {
 	descriptors, err := getDescriptors()
 	if err != nil {
 		log.Fatal(err)
@@ -41,7 +51,7 @@ func visualizeFolder(format graphics.ImageFormat, quality int) {
 
 	for _, val := range descriptors {
 		go func(fileName string) {
-			if err := visualize(fileName, format, quality); err != nil {
+			if err := visualize(fileName, format, quality, arrangeFn, dataLoaderFn); err != nil {
 				log.Printf("Unable to process %s: %s\n", fileName, err.Error())
 			}
 			wg.Done()
