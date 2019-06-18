@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"graph-labs/tinyviz/graphics"
+	"graph-labs/tinyviz/input"
+	"graph-labs/tinyviz/random"
 	"os"
 	"path/filepath"
 )
@@ -46,5 +48,30 @@ func pickFormat(extension string) (graphics.ImageFormat, error) {
 		return graphics.Jpeg, nil
 	default:
 		return graphics.Png, fmt.Errorf("Incorrect argument: excepted \"png\", \"jpg\" or \"jpeg\", given \"%s\"", extension)
+	}
+}
+
+// pickArrangementFn ...
+func pickArrangementFn(arrangement string) (graphics.ArrangementFn, error) {
+	switch arrangement {
+	case "random":
+		return graphics.PutVertexInRandomFreeCell, nil
+	case "coord":
+		return graphics.PutVertexAtPosition, nil
+	default:
+		return nil, fmt.Errorf("Incorrect argument: excepted \"random\", or \"coord\", given \"%s\"", arrangement)
+	}
+}
+
+// initDataLoader ...
+func initDataLoader(arrangement string) (input.ArrangementLoader, error) {
+	switch arrangement {
+	case "random":
+		random.ShuffleSeed()
+		return nil, nil
+	case "coord":
+		return input.CoordinatesLoader, nil
+	default:
+		return nil, fmt.Errorf("Incorrect argument: excepted \"random\", or \"coord\", given \"%s\"", arrangement)
 	}
 }
