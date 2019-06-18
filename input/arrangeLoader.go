@@ -16,13 +16,13 @@ type coordRepresentation struct {
 func CoordinatesLoader(fileName string) (interface{}, error) {
 	f, err := ioutil.ReadFile(fileName)
 	if err != nil {
-		return concreteCoords{}, err
+		return nil, err
 	}
 
 	// Unmarshall data
 	var cRep coordRepresentation
 	if err = json.Unmarshal(f, &cRep); err != nil {
-		return concreteCoords{}, err
+		return nil, err
 	}
 
 	return cRep.Coords, nil
