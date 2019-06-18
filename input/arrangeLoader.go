@@ -12,8 +12,6 @@ type coordRepresentation struct {
 	Coords [][]int `json:"coordinates"`
 }
 
-type concreteCoords struct{ coords [][]int }
-
 // CoordinatesLoader ...
 func CoordinatesLoader(fileName string) (interface{}, error) {
 	f, err := ioutil.ReadFile(fileName)
