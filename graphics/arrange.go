@@ -8,7 +8,7 @@ import (
 )
 
 // PutVertexInRandomFreeCell ...
-func PutVertexInRandomFreeCell(positions []Vertex2D, options RenderOptions, additionalData interface{}) {
+func PutVertexInRandomFreeCell(positions []Vertex2D, options RenderOptions, additionalData interface{}) error {
 	combination := random.Combination(options.VertexCount*options.VertexCount, options.VertexCount)
 
 	for i := 0; i < options.VertexCount; i++ {
@@ -16,6 +16,10 @@ func PutVertexInRandomFreeCell(positions []Vertex2D, options RenderOptions, addi
 		positions[i].y = float64(combination[i]/options.VertexCount+1) * CellSide
 		positions[i].inPath = false
 	}
+
+	return nil
+}
+
 // PutVertexAtPosition ...
 func PutVertexAtPosition(positions []Vertex2D, options RenderOptions, additionalData interface{}) error {
 	data, correct := additionalData.(struct{ coords [][]int })
