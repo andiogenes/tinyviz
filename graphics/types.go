@@ -60,3 +60,6 @@ const (
 	geVertex graphElement = iota
 	geEdge
 )
+
+// ArrangementFn ...
+type ArrangementFn func([]Vertex2D, RenderOptions, interface{})
