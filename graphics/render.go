@@ -8,7 +8,7 @@ import (
 )
 
 // RenderGraph рисует по заданным данным граф и сохраняет изображение в png-файл output
-func RenderGraph(output string, options *RenderOptions, arrangeFn func([]Vertex2D, RenderOptions), format ImageFormat, quality int) error {
+func RenderGraph(output string, options *RenderOptions, arrangeFn ArrangementFn, arrangementData interface{}, format ImageFormat, quality int) error {
 	if options == nil {
 		return fmt.Errorf("Nil argument passed")
 	}
@@ -19,7 +19,10 @@ func RenderGraph(output string, options *RenderOptions, arrangeFn func([]Vertex2
 	context := generateContext(imgSide, imgSide)
 
 	// Set position of vertices by some rule
-	arrangeFn(positions, *options)
+	err := arrangeFn(positions, *options, arrangementData)
+	if err != nil {
+		return err
+	}
 
 	// Marks path vertices
 	for _, val := range options.Path {
