@@ -62,4 +62,4 @@ const (
 )
 
 // ArrangementFn ...
-type ArrangementFn func([]Vertex2D, RenderOptions, interface{})
+type ArrangementFn func([]Vertex2D, RenderOptions, interface{}) error
