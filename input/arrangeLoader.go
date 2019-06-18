@@ -27,7 +27,5 @@ func CoordinatesLoader(fileName string) (interface{}, error) {
 		return concreteCoords{}, err
 	}
 
-	retVal := concreteCoords{coords: cRep.Coords}
-
-	return retVal, nil
+	return cRep.Coords, nil
 }
