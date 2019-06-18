@@ -15,7 +15,7 @@ type coordRepresentation struct {
 type concreteCoords struct{ coords [][]int }
 
 // CoordinatesLoader ...
-func CoordinatesLoader(fileName string) (struct{ coords [][]int }, error) {
+func CoordinatesLoader(fileName string) (interface{}, error) {
 	f, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		return concreteCoords{}, err
