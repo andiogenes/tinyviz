@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"graph-labs/tinyviz/random"
 	"log"
 	"os"
 
@@ -12,6 +11,7 @@ import (
 func main() {
 	var format string
 	var quality int
+	var arrangement string
 
 	app := cli.NewApp()
 
@@ -59,19 +59,27 @@ func main() {
 			arrangement = "random"
 		}
 
-		random.ShuffleSeed()
-
 		imgFormat, err := pickFormat(format)
 		if err != nil {
 			return err
 		}
 
-		if c.NArg() > 0 {
-			err := visualize(c.Args()[0], imgFormat, quality)
+		arrangementFn, err := pickArrangementFn(arrangement)
+		if err != nil {
 			return err
 		}
 
-		visualizeFolder(imgFormat, quality)
+		dataLoaderFn, err := initDataLoader(arrangement)
+		if err != nil {
+			return err
+		}
+
+		if c.NArg() > 0 {
+			err := visualize(c.Args()[0], imgFormat, quality, arrangementFn, dataLoaderFn)
+			return err
+		}
+
+		visualizeFolder(imgFormat, quality, arrangementFn, dataLoaderFn)
 
 		return nil
 	}
