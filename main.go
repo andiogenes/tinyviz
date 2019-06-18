@@ -54,7 +54,7 @@ func main() {
 			quality = 80
 		}
 
-		if arrangement != "random" && arrangement != "coord" {
+		if arrangement != "random" && arrangement != "coord" && arrangement != "rand" && arrangement != "r" && arrangement != "c" {
 			fmt.Println("Unknown arrangement type \"", arrangement, "\", reset to \"random\"")
 			arrangement = "random"
 		}

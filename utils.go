@@ -54,9 +54,9 @@ func pickFormat(extension string) (graphics.ImageFormat, error) {
 // pickArrangementFn ...
 func pickArrangementFn(arrangement string) (graphics.ArrangementFn, error) {
 	switch arrangement {
-	case "random":
+	case "random", "rand", "r":
 		return graphics.PutVertexInRandomFreeCell, nil
-	case "coord":
+	case "coord", "c":
 		return graphics.PutVertexAtPosition, nil
 	default:
 		return nil, fmt.Errorf("Incorrect argument: excepted \"random\", or \"coord\", given \"%s\"", arrangement)
@@ -66,10 +66,10 @@ func pickArrangementFn(arrangement string) (graphics.ArrangementFn, error) {
 // initDataLoader ...
 func initDataLoader(arrangement string) (input.ArrangementLoader, error) {
 	switch arrangement {
-	case "random":
+	case "random", "rand", "r":
 		random.ShuffleSeed()
 		return nil, nil
-	case "coord":
+	case "coord", "c":
 		return input.CoordinatesLoader, nil
 	default:
 		return nil, fmt.Errorf("Incorrect argument: excepted \"random\", or \"coord\", given \"%s\"", arrangement)
