@@ -19,7 +19,7 @@ func main() {
 	app := cli.NewApp()
 
 	app.Name = "tinyviz"
-	app.Version = "0.2.0"
+	app.Version = "0.3.0"
 	app.Description = "Graph visualization tool for educational purposes"
 	app.Authors = []cli.Author{
 		{Name: "Anton", Email: "megadeathlightsaber@gmail.com"},
