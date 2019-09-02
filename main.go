@@ -85,15 +85,16 @@ func main() {
 		if c.NArg() > 0 {
 			if hotReload {
 				watcher := watcher.NewModTimeWatcher(func(f *os.File) error {
-					err := visualize(f.Name(), imgFormat, quality, arrangementFn, dataLoaderFn)
-					return err
+					// Ignore errors
+					visualize(f.Name(), imgFormat, quality, arrangementFn, dataLoaderFn)
+					return nil
 				})
 				defer watcher.Close()
 
 				watcher.AddFile(c.Args()[0])
 				watcher.Run(time.Millisecond * 100)
 
-				err := <-watcher.Errors
+					err := <-watcher.Errors
 				return err
 			}
 
