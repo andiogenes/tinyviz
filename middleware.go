@@ -35,7 +35,7 @@ func visualize(fileName string, format graphics.ImageFormat, quality int, arrang
 	if err != nil {
 		return err
 	}
-	fmt.Printf("%s visualizated\n", fileName)
+	fmt.Printf("%s visualized\n", fileName)
 
 	return nil
 }
