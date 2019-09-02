@@ -94,7 +94,7 @@ func main() {
 				watcher.AddFile(c.Args()[0])
 				watcher.Run(time.Millisecond * 100)
 
-					err := <-watcher.Errors
+				err := <-watcher.Errors
 				return err
 			}
 
