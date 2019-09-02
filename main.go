@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"graph-labs/tinyviz/watcher"
 	"log"
 	"os"
+	"time"
 
 	"github.com/urfave/cli"
 )
@@ -12,6 +14,7 @@ func main() {
 	var format string
 	var quality int
 	var arrangement string
+	var hotReload bool
 
 	app := cli.NewApp()
 
@@ -40,6 +43,11 @@ func main() {
 			Value:       "random",
 			Usage:       "image vertex arrangement (random/coord)",
 			Destination: &arrangement,
+		},
+		cli.BoolFlag{
+			Name:        "hotreload, hr",
+			Usage:       "revisualize graph when config file changes (works only with single file)",
+			Destination: &hotReload,
 		},
 	}
 
@@ -75,6 +83,20 @@ func main() {
 		}
 
 		if c.NArg() > 0 {
+			if hotReload {
+				watcher := watcher.NewModTimeWatcher(func(f *os.File) error {
+					err := visualize(f.Name(), imgFormat, quality, arrangementFn, dataLoaderFn)
+					return err
+				})
+				defer watcher.Close()
+
+				watcher.AddFile(c.Args()[0])
+				watcher.Run(time.Millisecond * 100)
+
+				err := <-watcher.Errors
+				return err
+			}
+
 			err := visualize(c.Args()[0], imgFormat, quality, arrangementFn, dataLoaderFn)
 			return err
 		}
