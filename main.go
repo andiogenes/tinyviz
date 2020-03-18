@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"graph-labs/tinyviz/watcher"
+	watch "github.com/andiogenes/TinyViz/watcher"
 	"log"
 	"os"
 	"time"
@@ -84,14 +84,14 @@ func main() {
 
 		if c.NArg() > 0 {
 			if hotReload {
-				watcher := watcher.NewModTimeWatcher(func(f *os.File) error {
+				watcher := watch.NewModTimeWatcher(func(f *os.File) error {
 					// Ignore errors
-					visualize(f.Name(), imgFormat, quality, arrangementFn, dataLoaderFn)
+					_ = visualize(f.Name(), imgFormat, quality, arrangementFn, dataLoaderFn)
 					return nil
 				})
 				defer watcher.Close()
 
-				watcher.AddFile(c.Args()[0])
+				_ = watcher.AddFile(c.Args()[0])
 				watcher.Run(time.Millisecond * 100)
 
 				err := <-watcher.Errors

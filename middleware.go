@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"graph-labs/tinyviz/graphics"
-	"graph-labs/tinyviz/input"
-	"graph-labs/tinyviz/legacy"
+	"github.com/andiogenes/TinyViz/graphics"
+	"github.com/andiogenes/TinyViz/input"
+	"github.com/andiogenes/TinyViz/legacy"
 	"log"
 	"sync"
 )

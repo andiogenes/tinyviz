@@ -4,11 +4,11 @@ package graphics
 
 import (
 	"fmt"
-	"graph-labs/tinyviz/random"
+	"github.com/andiogenes/TinyViz/random"
 )
 
 // PutVertexInRandomFreeCell ...
-func PutVertexInRandomFreeCell(positions []Vertex2D, options RenderOptions, additionalData interface{}) error {
+func PutVertexInRandomFreeCell(positions []Vertex2D, options RenderOptions, _ interface{}) error {
 	combination := random.Combination(options.VertexCount*options.VertexCount, options.VertexCount)
 
 	for i := 0; i < options.VertexCount; i++ {
