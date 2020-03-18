@@ -24,7 +24,7 @@ func PutVertexInRandomFreeCell(positions []Vertex2D, options RenderOptions, _ in
 func PutVertexAtPosition(positions []Vertex2D, options RenderOptions, additionalData interface{}) error {
 	data, correct := additionalData.([][]int)
 	if !correct {
-		return fmt.Errorf("Type assertion failed - given data doesn't represent type [][]int")
+		return fmt.Errorf("type assertion failed - given data doesn't represent type [][]int")
 	}
 
 	for i := 0; i < options.VertexCount; i++ {
