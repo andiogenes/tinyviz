@@ -1,4 +1,4 @@
-module github.com/andiogenes/TinyViz
+module github.com/andiogenes/tinyviz
 
 go 1.13
 

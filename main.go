@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	watch "github.com/andiogenes/TinyViz/watcher"
+	watch "github.com/andiogenes/tinyviz/watcher"
 	"log"
 	"os"
 	"time"

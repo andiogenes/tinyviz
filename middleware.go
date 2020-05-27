@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/andiogenes/TinyViz/graphics"
-	"github.com/andiogenes/TinyViz/input"
-	"github.com/andiogenes/TinyViz/legacy"
+	"github.com/andiogenes/tinyviz/graphics"
+	"github.com/andiogenes/tinyviz/input"
+	"github.com/andiogenes/tinyviz/legacy"
 	"log"
 	"sync"
 )

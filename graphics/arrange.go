@@ -4,7 +4,7 @@ package graphics
 
 import (
 	"fmt"
-	"github.com/andiogenes/TinyViz/random"
+	"github.com/andiogenes/tinyviz/random"
 )
 
 // PutVertexInRandomFreeCell ...

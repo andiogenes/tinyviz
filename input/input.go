@@ -2,7 +2,7 @@ package input
 
 import (
 	"encoding/json"
-	"github.com/andiogenes/TinyViz/graphics"
+	"github.com/andiogenes/tinyviz/graphics"
 	"io/ioutil"
 	"strconv"
 )

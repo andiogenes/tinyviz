@@ -3,7 +3,7 @@ package legacy
 import (
 	"errors"
 	"fmt"
-	"github.com/andiogenes/TinyViz/graphics"
+	"github.com/andiogenes/tinyviz/graphics"
 	"io/ioutil"
 	"strconv"
 	"strings"
